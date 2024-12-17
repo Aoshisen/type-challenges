@@ -33,13 +33,10 @@
 
   > 在 Github 上查看：https://tsch.js.org/9/zh-CN
 */
-
 /* _____________ 你的代码 _____________ */
-
-type DeepReadonly<T> = {
-  readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K]
+type DeepReadonly<T> = T extends Function ? T : {
+  readonly [K in keyof T]: DeepReadonly<T[K]>
 }
-
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
