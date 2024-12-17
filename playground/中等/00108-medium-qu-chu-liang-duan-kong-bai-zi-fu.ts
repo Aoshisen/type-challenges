@@ -17,8 +17,10 @@
 */
 
 /* _____________ 你的代码 _____________ */
+type TrimLeft<S extends string> = S extends `${" " | "\n" | "\t"}${infer T}` ? TrimLeft<T> : S
+type TrimRight<S extends string> = S extends `${infer T}${" " | "\n" | "\t"}` ? TrimRight<T> : S
 
-type Trim<S extends string> = any
+type Trim<S extends string> = TrimLeft<TrimRight<S>>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
