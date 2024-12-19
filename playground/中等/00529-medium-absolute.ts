@@ -19,7 +19,8 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Absolute<T extends number | string | bigint> = any
+type StringType<T> = T extends number | bigint ? `${T}` : T
+type Absolute<T extends number | string | bigint> = StringType<T> extends `-${infer TAIL}` ? `${TAIL}` : StringType<T>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

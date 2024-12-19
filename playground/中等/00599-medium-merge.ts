@@ -28,7 +28,10 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Merge<F, S> = any
+type Merge<F, S> = {
+  // 前面的覆盖后面的
+  [P in keyof F | keyof S]: P extends keyof S ? S[P] : P extends keyof F ? F[P] : any
+}
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -41,6 +44,7 @@ type Bar = {
   b: number
   c: boolean
 }
+type C = Merge<Foo, Bar>
 
 type cases = [
   Expect<Equal<Merge<Foo, Bar>, {

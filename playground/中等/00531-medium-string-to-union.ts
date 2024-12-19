@@ -18,8 +18,8 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type StringToUnion<T extends string> = any
+type MapString<T> = T extends `${infer HEAD extends string}${infer TAIL}` ? [HEAD, ...MapString<TAIL>] : []
+type StringToUnion<T extends string> = MapString<T>[number]
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

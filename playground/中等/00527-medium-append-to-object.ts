@@ -19,7 +19,13 @@
 
 /* _____________ 你的代码 _____________ */
 
-type AppendToObject<T, U, V> = any
+type ObjectType<T> = {
+  [K in keyof T]: T[K]
+}
+type AppendToObject<T extends {}, U extends string | number | symbol, V> =
+  {
+    [P in U | keyof ObjectType<T>]: P extends keyof ObjectType<T> ? ObjectType<T>[P] : V
+  }
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
