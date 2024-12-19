@@ -16,7 +16,13 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Permutation<T> = any
+// 元素转 联合类型
+type Permutation<T, K = T> = [T] extends [never] ? []
+  : K extends T ?
+      [K, ...Permutation<Exclude<T, K>>]
+    : never
+
+type C = Permutation<'A' | 'B'>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

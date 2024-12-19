@@ -18,7 +18,7 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Flatten = any
+type Flatten<T extends readonly unknown[]> = T extends [infer HEAD, ...infer TAIL] ? HEAD extends unknown[] ? [...Flatten<HEAD>, ...Flatten<TAIL>] : [HEAD, ...Flatten<TAIL>] : []
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

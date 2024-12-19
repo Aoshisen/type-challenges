@@ -12,8 +12,9 @@
 
 /* _____________ 你的代码 _____________ */
 
-type LengthOfString<S extends string> = any
-
+// 把 字符串转换成数组
+type MapString<T> = T extends `${infer HEAD extends string}${infer TAIL}` ? [HEAD, ...MapString<TAIL>] : []
+type LengthOfString<S extends string> = MapString<S>['length']
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
