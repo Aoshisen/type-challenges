@@ -20,14 +20,20 @@
 
 /* _____________ 你的代码 _____________ */
 
-type IsUnion<T, U = T> = [T] extends [never]
-  ? false
-  : T extends unknown
+// fix this
+type IsUnion<T, U = T> = [T] extends [never] ? false :
+  T extends unknown
     ? [U] extends [T]
         ? false
         : true
     : false
 
+// type B<T, U = T> = [U] extends [T] ? true : false
+// type C<T, U = T> = T extends unknown ? [U] extends [T] ? true : false : false
+// type Test1 = B<string | number> // true
+// type Test2 = C<string | number> // false
+// (string extends unknown ? [string | number] extends [string] ? true : false : false) |
+// (number extends unknown ? [string | number] extends [number] ? true : false : false)
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
