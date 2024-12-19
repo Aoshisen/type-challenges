@@ -24,8 +24,9 @@
 
 /* _____________ 你的代码 _____________ */
 
-type KebabCase<S> = any
-
+type KebabLowerCase<T extends string> = T extends Lowercase<T> ? T : `-${Lowercase<T>}`
+type MapTAIL<T> = T extends `${infer HEAD}${infer TAIL}` ? `${KebabLowerCase<HEAD>}${MapTAIL<TAIL>}` : ''
+type KebabCase<S> = S extends `${infer HEAD}${infer TAIL}` ? `${Lowercase<HEAD>}${MapTAIL<TAIL>}` : ''
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

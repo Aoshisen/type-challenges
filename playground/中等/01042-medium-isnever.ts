@@ -23,7 +23,7 @@
 
 /* _____________ 你的代码 _____________ */
 
-type IsNever<T> = any
+type IsNever<T> = Equal<never, T>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

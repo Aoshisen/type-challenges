@@ -18,8 +18,11 @@
 */
 
 /* _____________ 你的代码 _____________ */
+type ValidType<T> = T extends undefined | null ? false : true
 
-type AnyOf<T extends readonly any[]> = any
+type MapChildren<T extends readonly unknown[]> = T extends [infer HEAD, ...infer TAIL] ? ValidType<HEAD> extends false ? false : MapChildren<TAIL> : true
+
+type AnyOf<T extends readonly any[]> = T extends [] ? false : MapChildren<T>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

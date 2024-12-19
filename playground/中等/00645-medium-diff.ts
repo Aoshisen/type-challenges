@@ -27,7 +27,16 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Diff<O, O1> = any
+// 去除两个里面共同的
+type Union<O, O1> = {
+  [P in keyof O | keyof O1]: P extends keyof O1 ? O1[P] : P extends keyof O ? O[P] : never
+}
+type Same<O, O1> = {
+  [P in keyof O & keyof O1]: O[P] extends O1[P] ? O1[P] : never
+}
+type Diff<O, O1> = {
+  [P in Exclude<keyof Union<O, O1>, keyof Same<O, O1>>]: Union<O, O1>[P]
+}
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -41,6 +50,7 @@ type Bar = {
   age: string
   gender: number
 }
+
 type Coo = {
   name: string
   gender: number
