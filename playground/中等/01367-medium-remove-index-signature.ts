@@ -23,17 +23,16 @@
 
 /* _____________ 你的代码 _____________ */
 
-type RemoveIndexSignature<T> = any
-
+type RemoveIndexSignature<T> = {
+  [K in keyof T as {} extends Record<K, unknown> ? never : K]: T[K]
+}
+// type T = {} extends { a: any } ? true : false
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
 type Foo = {
-  [key: string]: any
   foo(): void
-}
-type K = {
-  [P in keyof Foo]: P extends [x: string] ? 1 : 2
+  [key: string]: any
 }
 type Bar = {
   [key: number]: any
