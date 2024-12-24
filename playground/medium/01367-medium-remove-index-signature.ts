@@ -32,7 +32,9 @@ type Foo = {
   [key: string]: any
   foo(): void
 }
-
+type K = {
+  [P in keyof Foo]: P extends [x: string] ? 1 : 2
+}
 type Bar = {
   [key: number]: any
   bar(): void

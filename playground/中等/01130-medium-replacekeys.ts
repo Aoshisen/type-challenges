@@ -45,7 +45,11 @@
 
 /* _____________ 你的代码 _____________ */
 
-type ReplaceKeys<U, T, Y> = any
+// U 是 需要替换的类型的联合类型， T是需要替换字段的key的联合类型, Y 是需要替换成的类型,
+// T 需要在U 的key 中出现过
+type ReplaceKeys<U, T extends string, K> = U extends {} ? {
+  [UK in keyof U]: T extends UK ? T extends keyof K ? K[T] : never : U[Exclude<UK, keyof K>]
+} : never
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
