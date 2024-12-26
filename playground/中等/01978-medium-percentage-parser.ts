@@ -30,7 +30,10 @@
 
 /* _____________ 你的代码 _____________ */
 
-type PercentageParser<A extends string> = any
+// /^(\+|\-)?(\d*)?(\%)?$/
+type ParseHead<T extends string> = T extends '' ? ['', ''] : T extends `${infer L}${infer R}` ? L extends '+' | '-' ? [L, R] : ['', T] : never
+type ParseTail<T extends string> = T extends '' ? ['', ''] : T extends `${infer L}%` ? [L, '%'] : [T, '']
+type PercentageParser<T extends string> = [ParseHead<T>[0], ...ParseTail<ParseHead<T>[1]>]
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

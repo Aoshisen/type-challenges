@@ -17,8 +17,16 @@
 */
 
 /* _____________ 你的代码 _____________ */
+// 两种情况, 空或者是空格 dropEmpty, 另一种,drop string,
 
-type DropChar<S, C> = any
+type DropChar<S extends string, C extends string, L extends string = ''> =
+  S extends `${infer HEAD}${infer TAIL}` ?
+    HEAD extends C ?
+      C extends ' ' | '' ?
+  `${L}${DropChar<TAIL, C, L>}`
+        : `${L}${DropChar<TAIL, C, L>}`
+      : `${L}${HEAD}${DropChar<TAIL, C, L>}`
+    : S
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
