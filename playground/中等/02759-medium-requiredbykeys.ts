@@ -27,7 +27,12 @@
 
 /* _____________ 你的代码 _____________ */
 
-type RequiredByKeys<T, K> = any
+type Unions<T, K> = {
+  [P in keyof (T & K)]: P extends keyof T
+    ? (P extends keyof K ? T[P] | K[P] : T[P])
+    : (P extends keyof K ? K[P] : never)
+}
+type RequiredByKeys<T, K extends keyof T = keyof T> = Unions<Required<Pick<T, K>>, Omit<T, K>>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

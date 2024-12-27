@@ -25,7 +25,13 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Mutable<T> = any
+type Mutable<T extends { [x: string]: any }> = {
+  -readonly [K in keyof T]: T[K]
+}
+type M = Mutable<Readonly<Todo1>>
+//   ^?
+type R = Readonly<Todo1>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

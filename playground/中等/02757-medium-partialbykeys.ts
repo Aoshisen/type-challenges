@@ -25,9 +25,16 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type PartialByKeys<T, K> = any
-
+type Unions<T, K> = {
+  [P in keyof (T & K)]: P extends keyof T
+    ? (P extends keyof K ? T[P] | K[P] : T[P])
+    : (P extends keyof K ? K[P] : never)
+}
+type PartialByKeys<T, K extends keyof T = keyof T> = Unions<Partial<Pick<T, K>>, Omit<T, K>>
+type PK = PartialByKeys<User, 'name'>
+//   ^?
+type PK1 = PartialByKeys<User, 'name'>
+//   ^?
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

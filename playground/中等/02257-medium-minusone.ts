@@ -56,6 +56,8 @@ type One = MinusOne<1>
 //   ^?
 type Two = MinusOne<10>
 //   ^?
+type Three = MinusOne<100>
+//   ^?
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
