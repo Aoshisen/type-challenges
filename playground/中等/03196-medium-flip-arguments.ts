@@ -20,9 +20,13 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type FlipArguments<T> = any
-
+type Flip<T extends any[]> = T extends [infer F, ...infer Rest] ? [...Flip<Rest>, F] : []
+type FlipArguments<T extends (...args: any) => any> = T extends (...args: infer A) => infer R ? (...args: Flip<A>) => R : unknown
+type F = Parameters<(arg0: string, arg1: number, arg2: boolean) => number>
+//   ^?
+// 你提到的 [arg0: string] 是在代码中给定参数名称的情况下 TypeScript 的行为。实际上，Parameters 不关心参数的名称，而是提取了参数的类型。函数的参数名称（如 arg0）并不影响类型本身，Parameters 只关心类型，
+type C = Flip<F>
+//   ^?
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

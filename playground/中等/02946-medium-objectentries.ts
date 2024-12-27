@@ -28,7 +28,6 @@ type ObjectEntries<T, U = Required<T>> = {
 }[keyof U]
 
 type O = ObjectEntries<Partial<Model>>
-
 //   ^?
 
 /* _____________ 测试用例 _____________ */
