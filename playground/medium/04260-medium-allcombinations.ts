@@ -18,8 +18,14 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type AllCombinations<S> = any
+type MapToArray<T> = T extends `${infer HEAD}${infer TAIL}` ? [HEAD, ...MapToArray<TAIL>] : []
+type M = MapToArray<'AB'>[number]
+//   ^?
+type E = MapToArray<''>[number]
+//   ^?
+type AllCombinations<S, K = MapToArray<S>[number]> = 
+type C1 = AllCombinations<''>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

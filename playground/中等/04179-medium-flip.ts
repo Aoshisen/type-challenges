@@ -20,7 +20,13 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Flip<T> = any
+type Flip<T> = {
+  [P in keyof T as T[P] extends string | number ? T[P] : `${T[P] extends boolean ? T[P] : never}`]: P
+}
+type C1 = Flip<{ pi: 'a' }>
+//    ^?
+type C2 = Flip<{ pi: 3.14, bool: true }>
+//    ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect, NotEqual } from '@type-challenges/utils'

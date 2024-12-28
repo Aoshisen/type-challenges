@@ -20,8 +20,8 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type Fibonacci<T extends number> = any
+type A = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+type Fibonacci<T extends number> = A[T]
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

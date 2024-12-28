@@ -16,15 +16,21 @@
 
 /* _____________ 你的代码 _____________ */
 
-type BEM<B extends string, E extends string[], M extends string[]> = any
+type BEM<B extends string, E extends string[], M extends string[]> = `${B}${E[0] extends undefined ? '' : '__'}${E[0] extends undefined ? '' : E[0]}${M extends [] ? '' : M[number] extends never ? '' : '--'}${M extends [] ? '' : M[number]}`
+type C1 = BEM<'btn', ['price'], []>
+//    ^?
+type C2 = BEM<'btn', ['price'], ['warning', 'success']>
+//    ^?
+type C3 = BEM<'btn', [], ['small', 'medium', 'large']>
+//    ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
 type cases = [
   Expect<Equal<BEM<'btn', ['price'], []>, 'btn__price'>>,
-  Expect<Equal<BEM<'btn', ['price'], ['warning', 'success']>, 'btn__price--warning' | 'btn__price--success' >>,
-  Expect<Equal<BEM<'btn', [], ['small', 'medium', 'large']>, 'btn--small' | 'btn--medium' | 'btn--large' >>,
+  Expect<Equal<BEM<'btn', ['price'], ['warning', 'success']>, 'btn__price--warning' | 'btn__price--success'>>,
+  Expect<Equal<BEM<'btn', [], ['small', 'medium', 'large']>, 'btn--small' | 'btn--medium' | 'btn--large'>>,
 ]
 
 /* _____________ 下一步 _____________ */
