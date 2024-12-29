@@ -23,8 +23,15 @@ type M = MapToArray<'AB'>[number]
 //   ^?
 type E = MapToArray<''>[number]
 //   ^?
-type AllCombinations<S, K = MapToArray<S>[number]> = 
+type ExcludeString<S, K extends string> = S extends `${infer L}${K}${infer R}` ? `${L}${R}` : ''
+type E1 = ExcludeString<'ABC', 'B'>
+//   ^?
+type AllCombinations<S, K extends string = MapToArray<S>[number]> = S extends '' ? S
+  : K extends string ? K | `${K}${AllCombinations<ExcludeString<S, K>>}` | ''
+    : never
 type C1 = AllCombinations<''>
+//   ^?
+type C2 = AllCombinations<'ABC'>
 //   ^?
 
 /* _____________ 测试用例 _____________ */

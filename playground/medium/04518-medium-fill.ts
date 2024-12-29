@@ -16,16 +16,27 @@
 
   > 在 Github 上查看：https://tsch.js.org/4518/zh-CN
 */
-
-/* _____________ 你的代码 _____________ */
-
 type Fill<
   T extends unknown[],
   N,
   Start extends number = 0,
   End extends number = T['length'],
-> = any
-
+  Ret extends unknown[] = [],
+  Prev extends boolean = false,
+  // use this to mark whether we shall Fill
+  // we seperate T to three segments [ ...Not fill, ...Fill, ...Not fill ]
+  // initially we do not fill,
+  // when we see Start, we set DoFill to true
+  // and preserve this state, until we see Ret
+  DoFill extends boolean = Prev extends true
+    ? Ret['length'] extends End
+      ? false
+      : Prev
+    : Ret['length'] extends Start
+      ? Ret['length'] extends End ? false : true // in case End == Start
+      : Prev,
+> = Ret['length'] extends T['length'] ? Ret
+  : Fill<T, N, Start, End, [...Ret, DoFill extends true ? N : T[Ret['length']]], DoFill>
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

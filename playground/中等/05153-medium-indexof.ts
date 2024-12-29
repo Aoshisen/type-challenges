@@ -18,7 +18,12 @@
 
 /* _____________ 你的代码 _____________ */
 
-type IndexOf<T, U> = any
+type IndexOf<T, U, B extends unknown[] = []> = T extends [infer HEAD, ...infer TAIL] ? Equal<U, HEAD> extends true ?
+  B['length']
+  : IndexOf<TAIL, U, [...B, HEAD]> :
+    -1
+type C1 = IndexOf<[1, 2, 3], 3>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

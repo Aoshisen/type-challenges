@@ -20,8 +20,24 @@
 
 /* _____________ 你的代码 _____________ */
 
-type IsTuple<T> = any
+type IsTuple<T> = Equal<never, T> extends true ? false :
+  T extends readonly unknown[] ?
+  // 区分 number[] 和[number]
+    number extends T['length'] ?
+      false
+      : T extends never ? false : true
+    : false
+type C1 = IsTuple<[]>
+//   ^?
+type C2 = IsTuple<[number]>
+//   ^?
+type C3 = IsTuple<readonly [1]>
+//   ^?
 
+type C6 = IsTuple<never>
+//   ^?
+
+type A = never extends never ? true : false
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

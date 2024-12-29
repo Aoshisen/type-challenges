@@ -17,8 +17,9 @@
 */
 
 /* _____________ 你的代码 _____________ */
+type TruncMain<T extends string> = T extends `${infer L}.${string}` ? L : T
 
-type Trunc = any
+type Trunc<T extends string | number> = TruncMain<`${T}`> extends '-' | '' ? `${TruncMain<`${T}`>}0` : TruncMain<`${T}`>
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
