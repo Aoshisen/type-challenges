@@ -16,10 +16,16 @@
   > 在 Github 上查看：https://tsch.js.org/8767/zh-CN
 */
 
+// @see 00296 Permutation
 /* _____________ 你的代码 _____________ */
+type Main<T, K = T> =
+  [T] extends [never] ? never
+    : K extends string ? `${K} ${Main<Exclude<T, K>>}` | K | Main<Exclude<T, K>>
+      : never
 
-type Combination<T extends string[]> = any
-
+type Combination<T extends string[]> = Main<T[number]>
+type Case1 = Combination<['foo', 'bar', 'baz']>
+//    ^?
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
