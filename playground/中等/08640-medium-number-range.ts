@@ -15,8 +15,11 @@
 */
 
 /* _____________ 你的代码 _____________ */
-
-type NumberRange<L, H> = any
+type ToArray<T, K extends number[] = []> = K['length'] extends T ? K : ToArray<T, [...K, K['length']]>
+type GetRangeBetween<L, H> = ToArray<H> extends [...ToArray<L>, ...infer TAIL] ? TAIL : never
+type NumberRange<L, H> = [...GetRangeBetween<L, H>, H][number]
+type T = NumberRange<2, 9>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
