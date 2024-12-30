@@ -39,7 +39,20 @@
 
 /* _____________ 你的代码 _____________ */
 
-type MapTypes<T, R> = any
+type MapTypes<T extends { [x: string]: unknown }, R extends { mapFrom: unknown, mapTo: unknown }, OR extends { mapFrom: unknown, mapTo: unknown } = R> = {
+  [P in keyof T]: (
+    R extends { mapFrom: T[P], mapTo: infer To } ?
+      To
+      : T[P] extends OR['mapFrom'] ? never : T[P]
+  )
+
+}
+
+type Case1 = MapTypes<{ stringToArray: string }, { mapFrom: string, mapTo: [] }>
+//     ^?
+
+type Case2 = MapTypes<{ name: string, date: Date }, { mapFrom: string, mapTo: boolean } | { mapFrom: Date, mapTo: string }>
+//     ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

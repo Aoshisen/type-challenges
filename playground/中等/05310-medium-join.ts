@@ -19,7 +19,7 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Join<T, U> = any
+type Join<T extends unknown[], U extends string | number = ',', FIRST_TAG extends boolean = true> = T extends [infer HEAD extends string | number, ...infer TAIL] ? `${FIRST_TAG extends true ? '' : U}${HEAD}${Join<TAIL, U, false>}` : ''
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
