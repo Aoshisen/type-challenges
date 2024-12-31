@@ -1,0 +1,51 @@
+/*
+  9286 - FirstUniqueCharIndex
+  -------
+  by jiangshan (@jiangshanmeta) #中等 #string
+
+  ### 题目
+
+  Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1. (Inspired by [leetcode 387](https://leetcode.com/problems/first-unique-character-in-a-string/))
+
+  > 在 Github 上查看：https://tsch.js.org/9286/zh-CN
+*/
+
+/* _____________ 你的代码 _____________ */
+
+type IsOnly<T, K extends string> = K extends '' ? false :
+  T extends `${infer HEAD}${K}${infer TAIL}` ?
+  `${HEAD}${TAIL}` extends `${string}${K}${string}` ?
+    false
+    : true
+    : false
+type C1 = IsOnly<'a', 'a'>
+//    ^?
+
+type FirstUniqueCharIndex<T extends string, Prev extends string[] = [], K extends string = T> =
+  T extends `${infer HEAD}${infer TAIL}` ?
+    IsOnly<K, HEAD> extends true ?
+    // 如果当前这个是唯一,返回之前Prev 保存的数组的长度
+      Prev['length']
+    // 如果当前这个不唯一那么进入下一个的比较
+      : FirstUniqueCharIndex<TAIL, [...Prev, HEAD], K>
+    : -1
+type Case1 = FirstUniqueCharIndex<'leetcode'>
+//    ^?
+
+/* _____________ 测试用例 _____________ */
+import type { Equal, Expect } from '@type-challenges/utils'
+
+type cases = [
+  Expect<Equal<FirstUniqueCharIndex<'leetcode'>, 0>>,
+  Expect<Equal<FirstUniqueCharIndex<'loveleetcode'>, 2>>,
+  Expect<Equal<FirstUniqueCharIndex<'aabb'>, -1>>,
+  Expect<Equal<FirstUniqueCharIndex<''>, -1>>,
+  Expect<Equal<FirstUniqueCharIndex<'aaa'>, -1>>,
+]
+
+/* _____________ 下一步 _____________ */
+/*
+  > 分享你的解答：https://tsch.js.org/9286/answer/zh-CN
+  > 查看解答：https://tsch.js.org/9286/solutions
+  > 更多题目：https://tsch.js.org/zh-CN
+*/

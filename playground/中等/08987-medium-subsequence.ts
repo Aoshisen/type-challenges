@@ -19,15 +19,10 @@
 */
 
 /* _____________ 你的代码 _____________ */
-type Main<T, K = T> =
-  [T] extends [never] ? []
-    : K extends unknown ? [K, ...Main<Exclude<T, K>>] | [K] | Main<Exclude<T, K>>
-      : []
 
-type Subsequence<T extends any[]> = T extends [infer HEAD, ...infer TAIL] ? [HEAD] | Subsequence<TAIL> | T : []
+type Subsequence<T extends any[]> = T extends [infer HEAD, ...infer TAIL] ? [HEAD] | [HEAD, ...Subsequence<TAIL>] | Subsequence<TAIL> : []
 type C1 = Subsequence<[1, 2]>
 //    ^?
-
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
