@@ -33,11 +33,23 @@
 
 /* _____________ 你的代码 _____________ */
 
-type ToPrimitive = any
+type ToPrimitive<T> =
+  T extends object ?
+    T extends () => void
+      ?
+      Function
+      :
+        {
+          [k in keyof T]: ToPrimitive<T[k]>
+        }
+    :
+    // NOTICE: valueof 获取值的类型
+    T extends { valueOf: () => infer R } ? R : T
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
+//
 type PersonInfo = {
   name: 'Tom'
   age: 30
