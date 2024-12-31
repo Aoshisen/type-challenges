@@ -18,8 +18,20 @@
 
 /* _____________ 你的代码 _____________ */
 
-type GetMiddleElement<T> = any
+// 从两边向中间遍历
+type GetMiddleElement<T extends unknown[]> = T['length'] extends 1 | 2 | 0 ?
+  T :
+  T extends [unknown, ...infer Next] ?
+    Next extends [...infer Center, unknown] ?
+      GetMiddleElement<Center>
+      : never
+    : []
 
+type C1 = GetMiddleElement<[]>
+//   ^?
+
+type C2 = GetMiddleElement<[1, 2, 3, 4, 5]>
+//   ^?
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
