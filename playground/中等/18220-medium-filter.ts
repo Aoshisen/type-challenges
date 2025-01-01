@@ -12,7 +12,12 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Filter<T extends any[], P> = []
+type Filter<T extends any[], P, Prev extends unknown[] = []> = T extends [infer HEAD, ...infer Tail] ?
+  HEAD extends P ?
+    Filter<Tail, P, [...Prev, HEAD]>
+    :
+    Filter<Tail, P, Prev>
+  : Prev
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

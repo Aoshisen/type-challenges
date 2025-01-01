@@ -24,8 +24,22 @@
 */
 
 /* _____________ 你的代码 _____________ */
+type MapArrayToUnion<T> = T extends [infer HEAD, ...infer TAIL] ? [HEAD] | MapArrayToUnion<TAIL> : never
+type MapArray<T> = T extends [] ? [] : MapArrayToUnion<T>
 
-type PermutationsOfTuple<T extends unknown[]> = any
+type M = MapArray<[1, 2]>
+//   ^?
+
+type PermutationsOfTuple<T extends unknown[]> = Map
+type C = unknown | any
+//   ^?
+
+type Case1 = PermutationsOfTuple<[]>
+//   ^?
+type Case2 = PermutationsOfTuple<[any]>
+//   ^?
+type Case3 = PermutationsOfTuple<[any, unknown]>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect, ExpectFalse } from '@type-challenges/utils'
@@ -52,7 +66,7 @@ type cases = [
     | [number, unknown, 1]
     | [unknown, number, 1]
   >>,
-  ExpectFalse<Equal<PermutationsOfTuple<[ 1, number, unknown ]>, [unknown]>>,
+  ExpectFalse<Equal<PermutationsOfTuple<[1, number, unknown]>, [unknown]>>,
 ]
 
 /* _____________ 下一步 _____________ */
