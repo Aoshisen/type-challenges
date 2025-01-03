@@ -17,7 +17,63 @@
 
 /* _____________ 你的代码 _____________ */
 
-type JSONSchema2TS<T extends { type: string }> = T['type']
+type Unions<T, K> = {
+  [P in keyof (T & K)]: P extends keyof T
+    ? (P extends keyof K ? T[P] | K[P] : T[P])
+    : (P extends keyof K ? K[P] : never)
+}
+type RequiredByKeys<T, K extends keyof T = keyof T> = Unions<Required<Pick<T, K>>, Omit<T, K>>
+// array 的时候有items, object 的时候有properties, string 和number 的时候有enums
+
+// ----------------------- string -----------------------------------
+type StringType = { type: 'string', enum?: string[] }
+type String2Ts<T extends StringType> = T['enum'] extends string[] ? T['enum'][number] : string
+type C1 = String2Ts<{ type: 'string', enum: ['a', 'b', 'c'] }>
+//   ^?
+type C2 = String2Ts<{ type: 'string' }>
+//   ^?
+
+// ----------------------- number -----------------------------------
+type NumberType = { type: 'number', enum?: number[] }
+type Number2Ts<T extends NumberType> = T['enum'] extends number[] ? T['enum'][number] : number
+type C3 = Number2Ts<{ type: 'number', enum: [1, 2, 3] }>
+//   ^?
+type C4 = Number2Ts<{ type: 'number' }>
+//   ^?
+
+// ----------------------- number -----------------------------------
+type BooleanType = { type: 'boolean' }
+type Boolean2Ts<T> = T extends BooleanType ? boolean : never
+type C5 = Boolean2Ts<{ type: 'boolean' }>
+//   ^?
+
+// ----------------------- number -----------------------------------
+
+type UnionType = NumberType | StringType | ObjectType | BooleanType | ArrayType
+type BaseType = NumberType | StringType | BooleanType | ArrayType
+type ArrayType = { type: 'array', items?: UnionType }
+
+type Array2Ts<T extends ArrayType> = T['items'] extends UnionType ? JSONSchema2TS<T['items']>[] : unknown[]
+
+type ProcessBaseType<T extends BaseType> = T extends StringType ? String2Ts<T> : T extends NumberType ? Number2Ts<T> : T extends BooleanType ? Boolean2Ts<T> : T extends ArrayType ? Array2Ts<T> : never
+
+type ObjectType = {
+  type: 'object'
+  properties?: { [x: string]: unknown }
+  required?: string[]
+}
+type Object2Ts<T extends ObjectType, P extends object | undefined = T['properties'], R extends string[] | undefined = T['required']> = P extends { [x: string]: unknown } ?
+  // properties 有值
+  RequiredByKeys<
+    {
+      [K in keyof P]?: P[K] extends ObjectType ? Object2Ts<P[K]> : P[K] extends BaseType ? ProcessBaseType<P[K]> : never
+    },
+    R extends string[] ? R[number]
+      : never
+  >
+  : Record<string, unknown>
+
+type JSONSchema2TS<T extends NumberType | StringType | BooleanType | ObjectType | ArrayType> = T extends BaseType ? ProcessBaseType<T> : T extends ObjectType ? Object2Ts<T> : never
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -87,9 +143,8 @@ type Result8 = Expect<Equal<Type8, Expected8>>
 // - Object types
 
 // + Arrays
-type Type9 = JSONSchema2TS<{
-  type: 'array'
-}>
+type Type9 = JSONSchema2TS<{ type: 'array' }>
+//    ^?
 type Expected9 = unknown[]
 type Result9 = Expect<Equal<Type9, Expected9>>
 
@@ -149,7 +204,7 @@ type Result13 = Expect<Equal<Type13, Expected13>>
 // - Mixed types
 
 // + Required fields
-type Type14 = JSONSchema2TS<{
+type Inner = {
   type: 'object'
   properties: {
     req1: { type: 'string' }
@@ -171,7 +226,10 @@ type Type14 = JSONSchema2TS<{
     }
   }
   required: ['req1', 'req2']
-}>
+}
+
+type Type14 = JSONSchema2TS<Inner>
+//    ^?
 type Expected14 = {
   req1: string
   req2: { a: number }
