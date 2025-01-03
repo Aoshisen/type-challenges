@@ -27,18 +27,22 @@
 type MapArrayToUnion<T> = T extends [infer HEAD, ...infer TAIL] ? [HEAD] | MapArrayToUnion<TAIL> : never
 type MapArray<T> = T extends [] ? [] : MapArrayToUnion<T>
 
-type M = MapArray<[1, 2]>
+// 将 [1,2] 转变成[1]|[2]
+type M = MapArray<[any, unknown]>
 //   ^?
 
-type PermutationsOfTuple<T extends unknown[]> = Map
-type C = unknown | any
-//   ^?
+// 将 ExtractArray<[1,2],2> => [1]
+type ExtractArray<T, K, P extends unknown[] = []> = T extends [infer HEAD, ...infer TAIL] ? Equal<HEAD, K> extends true ? ExtractArray<TAIL, K, P> : ExtractArray<TAIL, K, [...P, HEAD]> : P
+
+type PermutationsOfTuple<T extends unknown[], K = MapArray<T>> = K extends [infer R] ? [R, ...PermutationsOfTuple<ExtractArray<T, R>>] : []
 
 type Case1 = PermutationsOfTuple<[]>
 //   ^?
 type Case2 = PermutationsOfTuple<[any]>
 //   ^?
 type Case3 = PermutationsOfTuple<[any, unknown]>
+//   ^?
+type Case4 = PermutationsOfTuple<[any, unknown, never]>
 //   ^?
 
 /* _____________ 测试用例 _____________ */

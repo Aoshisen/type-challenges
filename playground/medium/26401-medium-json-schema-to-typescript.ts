@@ -17,7 +17,7 @@
 
 /* _____________ 你的代码 _____________ */
 
-type JSONSchema2TS<T> = any
+type JSONSchema2TS<T extends { type: string }> = T['type']
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
