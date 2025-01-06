@@ -30,13 +30,18 @@
 
 /* _____________ 你的代码 _____________ */
 
-type MapName<P, Prev extends string[] = []> = P extends `${infer HEAD}.${infer TAIL}` ? MapName<TAIL, [...Prev, HEAD]> : P extends `.${infer Last}` ? [...Prev, Last] : Prev
+type DeepOmit<T, K extends string> = K extends `${infer Current}.${infer Next extends string}` ?
+    {
+      [P in keyof T]:
+      Current extends P ?
+        DeepOmit<T[P], Next>
+        : T[P]
+    } :
+  Omit<T, K>
 
-type DeepOmit<T, P extends string> = {
-  [P in keyof T]:  extends keyof T ?
-    DeepOmit<T, Next>
-    : T[P]
-}
+// 没有点了
+type C = DeepOmit<obj, 'person.age'>
+//   ^?
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
