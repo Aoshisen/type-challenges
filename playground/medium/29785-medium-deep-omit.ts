@@ -30,7 +30,13 @@
 
 /* _____________ 你的代码 _____________ */
 
-type DeepOmit = any
+type MapName<P, Prev extends string[] = []> = P extends `${infer HEAD}.${infer TAIL}` ? MapName<TAIL, [...Prev, HEAD]> : P extends `.${infer Last}` ? [...Prev, Last] : Prev
+
+type DeepOmit<T, P extends string> = {
+  [P in keyof T]:  extends keyof T ?
+    DeepOmit<T, Next>
+    : T[P]
+}
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
