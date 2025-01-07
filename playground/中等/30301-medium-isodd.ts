@@ -12,7 +12,19 @@
 
 /* _____________ 你的代码 _____________ */
 
-type IsOdd<T extends number> = 
+type ToString<T extends number> = `${T}`
+type T = ToString<3e23>
+//   ^?
+type LastString<T extends string> = T extends `${infer Current}${infer Next}` ?
+  Next extends '' ?
+    Current :
+    LastString<Next> : T
+
+type L = LastString<'124'>
+//   ^?
+type Odd = '1' | '3' | '5' | '7' | '9'
+type IsOdd<T extends number> = ToString<T> extends `${string}${'.' | 'e'}${string}` ? false :
+  LastString<ToString<T>> extends Odd ? true : false
 
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
